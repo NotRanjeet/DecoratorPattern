@@ -1,6 +1,9 @@
 ﻿using Api.Utils;
+using Core.AppServices;
 using Core.Interfaces;
 using Infrastructure.Data;
+using Logic.Decorators;
+using Logic.Interfaces;
 using Logic.Todo;
 using Logic.Utils;
 using Microsoft.AspNetCore.Builder;
@@ -30,8 +33,30 @@ namespace Api
                 options.UseInMemoryDatabase(dbName));
             services.AddTransient<IRepository, EfRepository>();
             services.AddSingleton<Messages>();
-            services.AddHandlers();
+            //services.AddTransient<ICommandHandler<ToggleItemCommand>>(provider => 
+            //    new AuditLoggingDecorator<ToggleItemCommand>(
+            //        new ToggleItemCommand.ToggleItemCommandHandler(
+            //            provider.GetService<IRepository>()
+            //            )
+            //        )
+            //  );
+            services.AddTransient<ICommandHandler<ToggleItemCommand>>(GenerateToggleItemCommandFactory());
 
+        }
+
+        private static Func<IServiceProvider, ICommandHandler<ToggleItemCommand>> GenerateToggleItemCommandFactory()
+        {
+            Func<IServiceProvider, ICommandHandler<ToggleItemCommand>> factory = (IServiceProvider provider) =>
+            {
+                //Get repository from DI Container
+                var repository = provider.GetService<IRepository>();
+                //Create command handler using the Repository
+                var handler = new ToggleItemCommand.ToggleItemCommandHandler(repository);
+                var decorated = new AuditLoggingDecorator<ToggleItemCommand>(handler);
+                return decorated;
+
+            };
+            return factory;
         }
 
         public void Configure(IApplicationBuilder app)
@@ -40,6 +65,6 @@ namespace Api
             app.UseMvc();
         }
 
-        
+
     }
 }

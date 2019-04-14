@@ -8,28 +8,28 @@ using System.Text;
 
 namespace Core.AppServices
 {
-    public class CompleteCommand: ICommand
+    public sealed class ToggleItemCommand: ICommand
     {
         private int Id {get;}
 
         private bool Done {get;set;}
 
-        public CompleteCommand(int id, bool status)
+        public ToggleItemCommand(int id, bool status)
         {
             Id = id;
             Done = status;
         }
 
-        internal sealed class CompleteCommandHandler: ICommandHandler<CompleteCommand>
+        public internal sealed class ToggleItemCommandHandler: ICommandHandler<ToggleItemCommand>
         {
             private readonly IRepository repository;
 
-            public CompleteCommandHandler(IRepository repository)
+            public ToggleItemCommandHandler(IRepository repository)
             {
                 this.repository = repository;
             }
 
-            public Result Handle(CompleteCommand command)
+            public Result Handle(ToggleItemCommand command)
             {
                 var item = repository.GetById<TodoItem>(command.Id);
                 if(item == null)
