@@ -22,7 +22,7 @@ namespace Core.AppServices
             CompletedOnly = completedOnly;
         }
 
-        internal sealed class GetTodoListQueryHandler : IQueryHandler<GetTodoListQuery, List<TodoDto>>
+        public sealed class GetTodoListQueryHandler : IQueryHandler<GetTodoListQuery, List<TodoDto>>
         {
             private readonly IRepository repository;
 

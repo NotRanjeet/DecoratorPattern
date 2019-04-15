@@ -1,5 +1,6 @@
 ﻿using Api.Utils;
 using Core.AppServices;
+using Core.Dtos;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Logic.Decorators;
@@ -11,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
+using static Core.AppServices.GetTodoListQuery;
 
 namespace Api
 {
@@ -40,6 +43,7 @@ namespace Api
             //            )
             //        )
             //  );
+            services.AddTransient<IQueryHandler<GetTodoListQuery, List<TodoDto>>, GetTodoListQueryHandler>();
             services.AddTransient<ICommandHandler<ToggleItemCommand>>(GenerateToggleItemCommandFactory());
 
         }

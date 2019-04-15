@@ -20,7 +20,7 @@ namespace Core.AppServices
             Done = status;
         }
 
-        public internal sealed class ToggleItemCommandHandler: ICommandHandler<ToggleItemCommand>
+        public sealed class ToggleItemCommandHandler: ICommandHandler<ToggleItemCommand>
         {
             private readonly IRepository repository;
 
@@ -34,7 +34,7 @@ namespace Core.AppServices
                 var item = repository.GetById<TodoItem>(command.Id);
                 if(item == null)
                 {
-                    Result.Fail($"No Item found with Id: {command.Id}");
+                    return Result.Fail($"No Item found with Id: {command.Id}");
                 }
                 item.IsDone = command.Done;
                 if (command.Done)

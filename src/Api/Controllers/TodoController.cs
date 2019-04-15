@@ -1,4 +1,5 @@
 ﻿using Core.AppServices;
+using Core.Dtos;
 using Logic.Todo;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -24,6 +25,14 @@ namespace Api.Controllers
         {
             var list = message.Dispatch(new GetTodoListQuery());
             return Ok(list);
+        }
+
+
+        [HttpPut]
+        public IActionResult ToggleTaskItem([FromBody]ToggleItemDto toggle)
+        {
+            var result = message.Dispatch(new ToggleItemCommand(toggle.Id, toggle.IsDone));
+            return FromResult(result);
         }
     }
 }
